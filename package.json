@@ -1,0 +1,15 @@
+{
+  "name": "textmining",
+  "version": "1.0.0",
+  "description": "",
+  "main": "clarin_rss.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "node-cron": "^3.0.0",
+    "rss-parser": "^3.12.0"
+  }
+}

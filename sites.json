@@ -1,0 +1,52 @@
+[
+    {
+        "diario": "LaNacion",
+        "feed": "politica",
+        "url": "http://contenidos.lanacion.com.ar/herramientas/rss/categoria_id=30"
+      },
+      {
+        "diario": "LaNacion",
+        "feed": "economia",
+        "url": "http://contenidos.lanacion.com.ar/herramientas/rss/categoria_id=272"
+      },
+      {
+        "diario": "Clarin",
+        "feed": "politica",
+        "url": "http://www.clarin.com/rss/politica/"
+      },
+      {
+        "diario": "Clarin",
+        "feed": "economia",
+        "url": "http://www.clarin.com/rss/economia/"
+      },
+      {
+        "diario": "Pagina12",
+        "feed": "politica",
+        "url": "http://www.pagina12.com.ar/rss/secciones/el-pais/notas"
+      },
+      {
+        "diario": "Pagina12",
+        "feed": "economia",
+        "url": "http://www.pagina12.com.ar/rss/secciones/economia/notas"
+      },
+      {
+        "diario": "Telam",
+        "feed": "politica",
+        "url": "http://www.telam.com.ar/rss2/politica.xml"
+      },
+      {
+        "diario": "Telam",
+        "feed": "politica",
+        "url": "http://www.telam.com.ar/rss2/economia.xml"
+      },
+      {
+        "diario": "Cronica",
+        "feed": "politica",
+        "url": "http://www.diariocronica.com.ar/rss/politica"
+      },
+      {
+        "diario": "Cronica",
+        "feed": "economia",
+        "url": "http://www.diariocronica.com.ar/rss/economia"
+      }
+]
