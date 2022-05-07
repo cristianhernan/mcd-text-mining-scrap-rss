@@ -25,7 +25,7 @@ async function scrapSite() {
           }
       }
     }
-    console.log("Data scrapped: ",i, ' records');
+    console.log("Data scrapped: ",i, ' new records, Total: ', db.length);
     return i;
   } catch (error) {
     console.log(error);
@@ -58,9 +58,10 @@ async function run(){
 }
 
 //aca esta puesto para que corra cada 1 min
+run();
 setInterval(async function() {
   await run();
-},1000*10*1);
+},1000*60*5);
 
 
 
