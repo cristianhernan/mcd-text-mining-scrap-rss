@@ -60,7 +60,7 @@ async function run(){
 //aca esta puesto para que corra cada 1 min
 setInterval(async function() {
   await run();
-},1000*10*1);
+},1000*60*1);
 
 
 
