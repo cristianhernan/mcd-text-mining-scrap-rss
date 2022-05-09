@@ -3,6 +3,7 @@ let parser = new Parser();
 const fs = require("fs");
 //lee un json con los diarios que queremos scrapear
 const lsSites = require('./sites.json');
+const regex = /[^a-zA-ZÀ-ÖØ-öø-ÿ0-9 ¿?(),.;-_!¡'"&-]/i;
 let db = null;
 
 
@@ -16,11 +17,12 @@ async function scrapSite() {
           if (!db.find(x=> x.link === item.link)) {
             i++;
             db.push({
-              diario: site.diario,
-              topico: site.feed,
               titulo: item.title,
-              descripcion: `${item.content} ${item.contentSnippet}`,
+              descripcion: item["content:encodedSnippet"]?.replace(regex, ' '),
               link: item.link,
+              fecha : item.isoDate,
+              topico: site.feed,
+              diario: site.diario
             });
           }
       }
@@ -59,9 +61,9 @@ async function run(){
 
 //aca esta puesto para que corra cada 1 min
 run();
-setInterval(async function() {
-  await run();
-},1000*60*5);
+// setInterval(async function() {
+//   await run();
+// },1000*60*3);
 
 
 
