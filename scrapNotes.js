@@ -1,9 +1,9 @@
-const { JSDOM } = require("jsdom")
-const axios = require('axios')
-const fs = require("fs");
+import { JSDOM }  from 'jsdom'
+ import axios  from 'axios'
+import fs from 'fs';
 let db = [];
 
-const scrap = async (url, diario) => {
+export const scrap = async (url, diario) => {
     try {
 
         const { data } = await axios.get(url);
@@ -169,6 +169,3 @@ async function run() {
         console.error(error);
     }
 }
-
-run();
-
