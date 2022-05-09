@@ -18,11 +18,14 @@ async function scrapSite() {
             i++;
             //si no tiene contenido lo busco en el link de la nota
             let nota = item["content:encodedSnippet"];
+            console.info('diario: ',site.diario);
             if(!nota){  
-              console.info('scrapping nota')
+              console.info('scrapping link: ',item.link);
               nota = await scrap(item.link,site.diario);
+              console.info('-- scrapped content: ',nota?.length, ' bytes');
+              
             }
-
+            
             db.push({
               titulo: item.title,
               descripcion: item.content,
@@ -66,17 +69,17 @@ async function readData(file) {
 
 async function run(){
   console.log("Run on",new Date().toUTCString());
-  db=await readData('datos.json');
+  db=await readData('C:/Users/crist/OneDrive/datos.json');
   lsSites=await readData('sites.json');
   if(await scrapSite() > 0)
-    writeData('datos.json',JSON.stringify(db));
+    writeData('C:/Users/crist/OneDrive/datos.json',JSON.stringify(db));
 }
 
 //aca esta puesto para que corra cada 1 min
 run();
 setInterval(async function() {
   await run();
-},1000*60*2);
+},1000*60*5);
 
 
 

@@ -78,9 +78,12 @@ const scrapClarin = async (doc) => {
     let result = [];
     try {
 
-        const reqData = doc.querySelector(queryPath)
-        if(!reqData)
-            return null;
+        let reqData = doc.querySelector(queryPath)
+        if(!reqData){
+            reqData = doc.querySelector(queryPath.replace('politica','economia'));
+            if(!reqData) return null;
+        }
+
         for (const child of reqData.childNodes) {
             if (child.id === 'div-gpt-ad-inread2')
                 break;
