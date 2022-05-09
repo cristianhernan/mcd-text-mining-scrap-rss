@@ -5,7 +5,7 @@ let skipText =['googletag'];
 
 const upvoteFirstPost = async () => {
   try {
-   // const { data } = await axios.get("https://www.clarin.com/politica/martin-lousteau-lanzamiento-nacional-evolucion-peleamos-partido-salga-comodidad-abrace-gestion-_0_nZyrHLf2b2.html");
+   
    const { data } = await axios.get('https://www.clarin.com/politica/denuncian-gobierno-olvido-incluir-antartida-islas-malvinas-opciones-censo-nacional_0_bJbvrpqK4Y.html');
     const dom = new JSDOM(data, {
       runScripts: "outside-only"

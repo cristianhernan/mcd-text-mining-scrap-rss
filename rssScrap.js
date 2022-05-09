@@ -61,11 +61,7 @@ async function run(){
 run();
 setInterval(async function() {
   await run();
-<<<<<<< HEAD
 },1000*60*5);
-=======
-},1000*60*1);
->>>>>>> 2ea2c14b808166c5682498a55aee028d9f6824ab
 
 
 
