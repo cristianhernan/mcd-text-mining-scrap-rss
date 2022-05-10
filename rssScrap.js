@@ -10,7 +10,6 @@ let lsSites = null;
 let lsLinks = [];
 const json2csvParser = new csvParser.Parser({ delimiter: '|', headers:true })
 
-
 async function scrapSite() {
   try {
     let i=0;
@@ -18,6 +17,8 @@ async function scrapSite() {
       let feed = await parser.parseURL(site.url);
       //si no existe ese regristro (mira el link), lo inserta
       for (const item of feed.items) {
+          if(site.diario==='LaNacion' && !(item.categories.includes('Economía') || item.categories.includes('Política') ) )
+            continue;
           if (!lsLinks.find(x=> x.link === item.link)) {
             i++;
             //si no tiene contenido lo busco en el link de la nota
@@ -92,7 +93,7 @@ async function run(){
 run();
 setInterval(async function() {
   await run();
-},1000*60*15);
+},1000*60*30);
 
 
 
