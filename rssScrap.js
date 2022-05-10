@@ -73,7 +73,7 @@ async function readData(file) {
 
 async function run(){
   try {
-    console.log("Run on",new Date().toUTCString());
+    console.log("Run on",dayjs().format('YYYY-MM-DD hh:mm'));
     lsLinks= await readData('links.json');
     lsSites=await readData('sites.json');
     if(await scrapSite() > 0){
