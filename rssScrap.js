@@ -47,7 +47,7 @@ async function scrapSite() {
           }
       }
     }
-    console.log("Data scrapped: ",i, ' new records, Total: ', db.length);
+    console.log("Data scrapped: ",i, ' new records, Total: ', lsLinks.length);
     return i;
   } catch (error) {
     console.log(error);
@@ -75,10 +75,10 @@ async function readData(file) {
 async function run(){
   try {
     console.log("Run on",dayjs().format('YYYY-MM-DD hh:mm'));
-    lsLinks= await readData('links.json');
+    lsLinks= await readData('C:/Users/crist/OneDrive/texmining/links.json');
     lsSites=await readData('sites.json');
     if(await scrapSite() > 0){
-      await writeData('links.json',JSON.stringify(lsLinks));
+      await writeData('C:/Users/crist/OneDrive/texmining/links.json',JSON.stringify(lsLinks));
       let file = dayjs().format('YYMMDDhhmm');
       await writeData(`C:/Users/crist/OneDrive/texmining/notas_${file}.csv`,json2csvParser.parse(db));
     }
