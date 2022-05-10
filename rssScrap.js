@@ -1,10 +1,14 @@
 import Parser from  'rss-parser';
 let parser = new Parser();
-import fs  from "fs";
-const regex = /[^a-zA-ZÀ-ÖØ-öø-ÿ0-9 ¿?(),.;-_!¡'"&-]/i;
+import fs  from "fs/promises";
+const regex = /\s+/g;
 import {scrap} from './scrapNotes.js';
-let db = null;
+import csvParser  from 'json2csv';
+import dayjs from 'dayjs';
+let db = [];
 let lsSites = null;
+let lsLinks = [];
+const json2csvParser = new csvParser.Parser({ delimiter: '|', headers:true })
 
 
 async function scrapSite() {
@@ -14,21 +18,25 @@ async function scrapSite() {
       let feed = await parser.parseURL(site.url);
       //si no existe ese regristro (mira el link), lo inserta
       for (const item of feed.items) {
-          if (!db.find(x=> x.link === item.link)) {
+          if (!lsLinks.find(x=> x.link === item.link)) {
             i++;
             //si no tiene contenido lo busco en el link de la nota
             let nota = item["content:encodedSnippet"];
-            console.info('diario: ',site.diario);
+            //console.info('diario: ',site.diario);
             if(!nota){  
               console.info('scrapping link: ',item.link);
               nota = await scrap(item.link,site.diario);
               console.info('-- scrapped content: ',nota?.length, ' bytes');
               
             }
-            
+            lsLinks.push({
+              link: item.link 
+            })
+
+
             db.push({
-              titulo: item.title,
-              descripcion: item.content,
+              titulo: item.title.trim().replace(regex, ' '),
+              descripcion: item.content?.trim().replace(regex, ' '),
               link: item.link,
               fecha : item.isoDate,
               topico: site.feed,
@@ -47,39 +55,44 @@ async function scrapSite() {
 
 
 //lee el json con los datos
-function writeData(file, data) {
-  fs.writeFile(file, JSON.stringify(data), (err) => {
-      if (err) throw err;
-      console.log("Data saved ok");
-  });
+async function writeData(file, data) {
+  try {
+    await fs.writeFile(file, data);
+    console.info(file, data.length/1000, 'ok')
+    
+  } catch (error) {
+    throw error;
+  }
 }
 
 //lee el json con los datos
 async function readData(file) {
-  try {
-      let res = await fs.readFileSync(file); 
-      return JSON.parse(res);
-      
-  } catch (error) {
-      throw error;
-  }
-
-
+  let f= await fs.readFile(file);
+  return JSON.parse(f);
 }
 
 async function run(){
-  console.log("Run on",new Date().toUTCString());
-  db=await readData('C:/Users/crist/OneDrive/datos.json');
-  lsSites=await readData('sites.json');
-  if(await scrapSite() > 0)
-    writeData('C:/Users/crist/OneDrive/datos.json',JSON.stringify(db));
+  try {
+    console.log("Run on",new Date().toUTCString());
+    lsLinks= await readData('links.json');
+    lsSites=await readData('sites.json');
+    if(await scrapSite() > 0){
+      await writeData('links.json',JSON.stringify(lsLinks));
+      let file = dayjs().format('YYMMDDhhmm');
+      await writeData(`C:/Users/crist/OneDrive/texmining/notas_${file}.csv`,json2csvParser.parse(db));
+    }
+    
+  } catch (error) {
+    console.error(error);
+  }
+
 }
 
 //aca esta puesto para que corra cada 1 min
 run();
 setInterval(async function() {
   await run();
-},1000*60*5);
+},1000*60*15);
 
 
 
