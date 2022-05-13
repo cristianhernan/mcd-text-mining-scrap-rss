@@ -19,7 +19,7 @@ async function scrapSite() {
       for (const item of feed.items) {
           if(site.diario==='LaNacion' && !(item.categories.includes('Economía') || item.categories.includes('Política') ) )
             continue;
-          if (!lsLinks.find(x=> x.link === item.link)) {
+          if (item.link && !lsLinks.find(x=> x === item.link)) {
             i++;
             //si no tiene contenido lo busco en el link de la nota
             let nota = item["content:encodedSnippet"];
@@ -30,11 +30,8 @@ async function scrapSite() {
               console.info('-- scrapped content: ',nota?.length, ' bytes');
               
             }
-            lsLinks.push({
-              link: item.link 
-            })
-
-
+            lsLinks.push(item.link)
+            
             db.push({
               titulo: item.title.trim().replace(regex, ' '),
               descripcion: item.content?.trim().replace(regex, ' '),
