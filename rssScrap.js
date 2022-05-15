@@ -5,7 +5,7 @@ const regex = /\s+/g;
 import { scrap } from './scrapNotes.js';
 import csvParser from 'json2csv';
 import dayjs from 'dayjs';
-import { link } from 'fs';
+import { link, linkSync } from 'fs';
 let db = [];
 let lsSites = null;
 let lsLinks = [];
@@ -87,45 +87,56 @@ async function run() {
 
 }
 
+async function save_link_notes(links){
+  let data =[];
+  console.info('scrapping notes: ', links.length);
+  for (const l of links.filter(x => x.link)) {
+
+    let diario = '';
+
+    if (l.link.includes('diariocronica'))
+      diario = 'Cronica';
+    else if (l.link.includes('telam'))
+      diario = 'Telam';
+    else if (l.link.includes('clarin'))
+      diario = 'Clarin';
+    else if (l.link.includes('Pagina12'))
+      diario = 'Pagina12';
+
+    if (link && diario) {
+      console.info('scrapping link: ', l.link);
+      let nota = await scrap(l.link, diario);
+      console.info('-- scrapped content: ', nota?.length, ' bytes');
+
+      data.push({
+        link: l.link,
+        diario: diario,
+        contenido: nota?.trim().replace(regex, ' ')
+      });
+    }
+  }
+
+  let file = dayjs().format('YYMMDDhhmm');
+  await writeData(`C:/Users/crist/OneDrive/texmining/notas_${file}.csv`, json2csvParser.parse(data));
+}
+
 async function run_links() {
   try {
     console.log("Run on", dayjs().format('YYYY-MM-DD hh:mm'));
-    lsLinks = await readData('./old/solo_links.json');
-    for (const l of lsLinks.filter(x=>x.link)) {
+    lsLinks = await readData('./solo_links.json');
+    let linkvalidos = lsLinks.filter(x => x.link);
+    const cantVec = 5;
+    let cantElem = Math.ceil(linkvalidos.length/cantVec);
 
-      let diario = '';
-
-      if (l.link.includes('diariocronica'))
-        diario = 'Cronica';
-      else if(l.link.includes('telam'))
-        diario = 'Telam';
-      else if(l.link.includes('clarin'))
-        diario = 'Clarin';
-      else if(l.link.includes('Pagina12'))
-        diario = 'Pagina12';
-
-      if (link && diario) {
-        console.info('scrapping link: ', l.link);
-        let nota = await scrap(l.link, diario);
-        console.info('-- scrapped content: ', nota?.length, ' bytes');
-
-        db.push({
-          link: l.link,
-          diario: diario,
-          contenido: nota?.trim().replace(regex, ' ')
-        });
-
-        if (db.length == 50) {
-
-          let file = dayjs().format('YYMMDDhhmm');
-          await writeData(`C:/Users/crist/OneDrive/texmining/notas_${file}.csv`, json2csvParser.parse(db));
-          db = [];
-
-        }
-      }
+    let result = [];
+    for (let i = 1; i <= cantVec; i++) {
+      let from = (i-1)*cantElem;
+      let to = cantElem*i;
+      result.push(linkvalidos.slice(from,to));
     }
-    let file = dayjs().format('YYMMDDhhmm');
-    await writeData(`C:/Users/crist/OneDrive/texmining/notas_${file}.csv`, json2csvParser.parse(db));
+    result.forEach((vec)=>{
+      save_link_notes(vec);
+    })
 
   } catch (error) {
     console.error(error);
