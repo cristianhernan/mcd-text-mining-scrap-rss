@@ -116,8 +116,12 @@ async function save_link_notes(links){
     }
   }
 
-  let file = dayjs().format('YYMMDDhhmm');
-  await writeData(`C:/Users/crist/OneDrive/texmining/notas_${file}.csv`, json2csvParser.parse(data));
+  if(data.length){
+    let file = dayjs().format('YYMMDDhhmm');
+    await writeData(`C:/Users/crist/OneDrive/texmining/notas_${file}.csv`, json2csvParser.parse(data));
+  }
+  else
+    console.log('no data to save');
 }
 
 async function run_links() {
@@ -125,7 +129,7 @@ async function run_links() {
     console.log("Run on", dayjs().format('YYYY-MM-DD hh:mm'));
     lsLinks = await readData('./solo_links.json');
     let linkvalidos = lsLinks.filter(x => x.link);
-    const cantVec = 5;
+    const cantVec = 8;
     let cantElem = Math.ceil(linkvalidos.length/cantVec);
 
     let result = [];
