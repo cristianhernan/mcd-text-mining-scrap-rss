@@ -48,5 +48,30 @@
         "diario": "Cronica",
         "feed": "economia",
         "url": "http://www.diariocronica.com.ar/rss/economia"
+      },
+      {
+        "diario": "Clarin",
+        "feed": "policiales",
+        "url": "https://www.clarin.com/rss/policiales/"
+      },
+      {
+        "diario": "Telam",
+        "feed": "policiales",
+        "url": "https://www.telam.com.ar/rss2/policiales.xml"
+      },
+      {
+        "diario": "Pagina12",
+        "feed": "ElMundo",
+        "url": "https://www.pagina12.com.ar/rss/secciones/el-mundo/notas"
+      },
+      {
+        "diario": "LaNacion",
+        "feed": "ElMundo",
+        "url": "https://www.lanacionEl .com.ar/arcio/rss/"
+      },
+      {
+        "diario": "Cronica",
+        "feed": "policiales",
+        "url": "https://www.diariocronica.com.ar/rss/policiales"
       }
 ]

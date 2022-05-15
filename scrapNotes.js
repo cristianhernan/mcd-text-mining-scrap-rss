@@ -12,7 +12,7 @@ export const scrap = async (url, diario) => {
         });
         switch (diario) {
             case 'Clarin':
-                return await scrapClarin(dom.window.document);
+                return await scrapClarin(dom.window.document,url);
             case 'Telam':
                 return await scrapTelam(dom.window.document);
             case 'Pagina12':
@@ -72,17 +72,17 @@ const scrapPagina12 = async (doc) => {
     }
 }
 
-const scrapClarin = async (doc) => {
+const scrapClarin = async (doc,url) => {
     let skip_class = ['sp__Normal', 'ad-slot', 'ad-slot onlymobile'];
-    let queryPath = "body > div.main-menu.off-canvas-wrap > div > section > div.mainPage > div.content-all > div.news.container.newsNormal.no-p.stickyBar.politica.nota-unica > div:nth-child(2) > div > div.entry-body.col-lg-6.col-md-8.col-sm-12.col-xs-12 > div.body-nota";
+    let baseurl = 'https://www.clarin.com/';
+    let path = url.replace(baseurl,'');
+    let topico = path.substring(0,path.indexOf('/'));
+    let queryPath = `body > div.main-menu.off-canvas-wrap > div > section > div.mainPage > div.content-all > div.news.container.newsNormal.no-p.stickyBar.${topico}.nota-unica > div:nth-child(2) > div > div.entry-body.col-lg-6.col-md-8.col-sm-12.col-xs-12 > div.body-nota`;
     let result = [];
     try {
 
         let reqData = doc.querySelector(queryPath)
-        if(!reqData){
-            reqData = doc.querySelector(queryPath.replace('politica','economia'));
-            if(!reqData) return null;
-        }
+        if(!reqData) return null;
 
         for (const child of reqData.childNodes) {
             if (child.id === 'div-gpt-ad-inread2')
