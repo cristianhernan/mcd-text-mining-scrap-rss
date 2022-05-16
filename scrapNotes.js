@@ -24,7 +24,8 @@ export const scrap = async (url, diario) => {
         }
 
     } catch (error) {
-        console.log(error);
+        console.log(error?.code);
+        return null;
     }
 };
 
