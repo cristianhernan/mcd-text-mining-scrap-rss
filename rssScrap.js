@@ -5,7 +5,6 @@ const regex = /\s+/g;
 import { scrap } from './scrapNotes.js';
 import csvParser from 'json2csv';
 import dayjs from 'dayjs';
-import { link, linkSync } from 'fs';
 let db = [];
 let lsSites = null;
 let lsLinks = [];
@@ -20,7 +19,7 @@ async function scrapSite() {
       for (const item of feed.items) {
         if (site.diario === 'LaNacion' && !(item.categories.includes('El Mundo') || item.categories.includes('Economía') || item.categories.includes('Política')))
           continue;
-        if (item.link && !lsLinks.find(x => x === item.link)) {
+        if (item.link && !lsLinks.find(x => x.uri === item.link)) {
           i++;
           //si no tiene contenido lo busco en el link de la nota
           let nota = item["content:encodedSnippet"];
@@ -31,7 +30,7 @@ async function scrapSite() {
             console.info('-- scrapped content: ', nota?.length, ' bytes');
 
           }
-          lsLinks.push(item.link)
+          lsLinks.push({uri:item.link})
 
           db.push({
             titulo: item.title.trim().replace(regex, ' '),
@@ -73,12 +72,12 @@ async function readData(file) {
 async function run() {
   try {
     console.log("Run on", dayjs().format('YYYY-MM-DD hh:mm'));
-    lsLinks = await readData('C:/Users/crist/OneDrive/texmining/links.json');
+    lsLinks = await readData('G:/My Drive/Maestría/MCD-TPs-Grupo/Test Mining/CrisV-scrap/links_descargados.json');
     lsSites = await readData('sites.json');
     if (await scrapSite() > 0) {
-      await writeData('C:/Users/crist/OneDrive/texmining/links.json', JSON.stringify(lsLinks));
+      await writeData('G:/My Drive/Maestría/MCD-TPs-Grupo/Test Mining/CrisV-scrap/links_descargados.json', JSON.stringify(lsLinks));
       let file = dayjs().format('YYMMDDhhmm');
-      await writeData(`C:/Users/crist/OneDrive/texmining/notas_${file}.csv`, json2csvParser.parse(db));
+      await writeData(`G:/My Drive/Maestría/MCD-TPs-Grupo/Test Mining/CrisV-scrap/notas_${file}.csv`, json2csvParser.parse(db));
     }
 
   } catch (error) {
@@ -148,10 +147,10 @@ async function run_links() {
 
 }
 //aca esta puesto para que corra cada 1 min
-// run();
-// setInterval(async function () {
-//   await run();
-// }, 1000 * 60 * 30);
-run_links();
+run();
+setInterval(async function () {
+  await run();
+}, 1000 * 60 * 30);
+//run_links();
 
 

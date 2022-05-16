@@ -1,7 +1,5 @@
 import { JSDOM }  from 'jsdom'
  import axios  from 'axios'
-import fs from 'fs';
-let db = [];
 
 export const scrap = async (url, diario) => {
     try {
@@ -123,52 +121,3 @@ const scrapLaNacion = async (doc) => {
     }
 }
 
-function writeData(file, data) {
-    fs.writeFile(file, JSON.stringify(data), (err) => {
-        if (err) throw err;
-        console.log("Data saved ok");
-    });
-}
-
-//lee el json con los datos
-async function readData(file) {
-    try {
-        let res = await fs.readFileSync(file); 
-        return JSON.parse(res);
-        
-    } catch (error) {
-        throw error;
-    }
-
-
-}
-
-async function run() {
-    try {
-
-
-        let i = 0;
-        let j = 0;
-        let rssNotas = await readData('datos.json');
-        for (const item of rssNotas) {
-            console.info(`scraping: ${i++} / ${rssNotas.length}`, item.diario);
-            console.info('link ', item.link);
-            let rNota = await scrap(item.link, item.diario);
-            if (rNota) {
-                console.info('scrping OK ',j++);
-                db.push({
-                    diario: item.diario,
-                    link: item.link,
-                    nota: rNota
-                });
-            }
-            else
-                console.info('scrping not defined');
-        }
-        if (db.length > 0) {
-            writeData('notas.json', db);
-        }
-    } catch (error) {
-        console.error(error);
-    }
-}
