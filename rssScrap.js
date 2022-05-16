@@ -13,8 +13,15 @@ const json2csvParser = new csvParser.Parser({ delimiter: '|', headers: true })
 async function scrapSite() {
   try {
     let i = 0;
+    let feed =null;
     for (const site of lsSites) {
-      let feed = await parser.parseURL(site.url);
+      try {
+        feed = await parser.parseURL(site.url);
+      } catch (error) {
+        console.error(site.url,error?.code)
+        continue;
+      }
+
       //si no existe ese regristro (mira el link), lo inserta
       for (const item of feed.items) {
         if (site.diario === 'LaNacion' && !(item.categories.includes('El Mundo') || item.categories.includes('Economía') || item.categories.includes('Política')))
@@ -47,7 +54,7 @@ async function scrapSite() {
     console.log("Data scrapped: ", i, ' new records, Total: ', lsLinks.length);
     return i;
   } catch (error) {
-    console.log(error);
+    console.log(error?.code);
   }
 }
 
@@ -72,12 +79,12 @@ async function readData(file) {
 async function run() {
   try {
     console.log("Run on", dayjs().format('YYYY-MM-DD hh:mm'));
-    lsLinks = await readData('G:/My Drive/Maestría/MCD-TPs-Grupo/Test Mining/CrisV-scrap/links_descargados.json');
+    lsLinks = await readData('j:/My Drive/Maestría/MCD-TPs-Grupo/Test Mining/CrisV-scrap/links_descargados.json');
     lsSites = await readData('sites.json');
     if (await scrapSite() > 0) {
-      await writeData('G:/My Drive/Maestría/MCD-TPs-Grupo/Test Mining/CrisV-scrap/links_descargados.json', JSON.stringify(lsLinks));
+      await writeData('j:/My Drive/Maestría/MCD-TPs-Grupo/Test Mining/CrisV-scrap/links_descargados.json', JSON.stringify(lsLinks));
       let file = dayjs().format('YYMMDDhhmm');
-      await writeData(`G:/My Drive/Maestría/MCD-TPs-Grupo/Test Mining/CrisV-scrap/notas_${file}.csv`, json2csvParser.parse(db));
+      await writeData(`j:/My Drive/Maestría/MCD-TPs-Grupo/Test Mining/CrisV-scrap/notas_${file}.csv`, json2csvParser.parse(db));
     }
 
   } catch (error) {
