@@ -10,6 +10,8 @@ let lsSites = null;
 let lsLinks = [];
 const json2csvParser = new csvParser.Parser({ delimiter: '|', headers: true })
 
+const minutes = process.argv.slice(2)[0] ? process.argv.slice(2)[0] : 20  ;
+
 async function scrapSite() {
   try {
     let i = 0;
@@ -79,7 +81,7 @@ async function readData(file) {
 
 async function run() {
   try {
-    console.log("Run on", dayjs().format('YYYY-MM-DD hh:mm'));
+    console.log("Run on", dayjs().format('YYYY-MM-DD hh:mm'), ' every ',minutes,'min');
     lsLinks = await readData('j:/My Drive/Maestría/MCD-TPs-Grupo/Test Mining/CrisV-scrap/links_descargados.json');
     lsSites = await readData('sites.json');
     if (await scrapSite() > 0) {
@@ -158,7 +160,7 @@ async function run_links() {
 run();
 setInterval(async function () {
   await run();
-}, 1000 * 60 * 30);
+}, 1000 * 60 *  minutes);
 //run_links();
 
 
