@@ -26,7 +26,8 @@ async function scrapSite() {
       for (const item of feed.items) {
         if (site.diario === 'LaNacion' && !(item.categories.includes('El Mundo') || item.categories.includes('Economía') || item.categories.includes('Política')))
           continue;
-        if (item.link && !lsLinks.find(x => x.uri === item.link)) {
+        let yaProcesado = lsLinks.some(x => x.uri.trim() === item.link.trim());
+        if (item.link && !yaProcesado) {
           i++;
           //si no tiene contenido lo busco en el link de la nota
           let nota = item["content:encodedSnippet"];
@@ -54,7 +55,7 @@ async function scrapSite() {
     console.log("Data scrapped: ", i, ' new records, Total: ', lsLinks.length);
     return i;
   } catch (error) {
-    console.log(error?.code);
+    console.log(error?.code ? error.code : error);
   }
 }
 
