@@ -61,13 +61,13 @@
       },
       {
         "diario": "Pagina12",
-        "feed": "ElMundo",
-        "url": "https://www.pagina12.com.ar/rss/secciones/el-mundo/notas"
+        "feed": "Sociedad",
+        "url": "https://www.pagina12.com.ar/rss/secciones/sociedad/notas"
       },
       {
         "diario": "LaNacion",
-        "feed": "ElMundo",
-        "url": "http://contenidos.lanacion.com.ar/herramientas/rss/categoria_id=7"
+        "feed": "Sociedad",
+        "url": "http://contenidos.lanacion.com.ar/herramientas/rss/categoria_id=7773"
       },
       {
         "diario": "Cronica",
